@@ -223,3 +223,4 @@ D:\Dosuments\Ultimate-TS\authentication_practices\obj\Debug\net8.0\..pdb
 D:\Dosuments\Ultimate-TS\authentication_practices\obj\Debug\net8.0\..genruntimeconfig.cache
 D:\Dosuments\Ultimate-TS\authentication_practices\obj\Debug\net8.0\ref\..dll
 D:\Dosuments\Ultimate-TS\authentication_practices\bin\Debug\net8.0\Newtonsoft.Json.dll
+D:\Dosuments\Ultimate-TS\authentication_practices\obj\Debug\net8.0\..sourcelink.json

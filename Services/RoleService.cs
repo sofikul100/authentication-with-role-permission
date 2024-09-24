@@ -8,6 +8,9 @@ public interface IRoleService
     Task DeleteRoleAsync(int id);
     Task AssignRoleToUser(int userId, int roleId);
 
+    //========for dynamic role authorization================================
+    Task<List<Role>> GetRolesByUserIdAsync(int userId);
+
 }
 
 
@@ -76,6 +79,18 @@ public class RoleService : IRoleService
         await _context.UserRoles.AddAsync(userRole);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<List<Role>> GetRolesByUserIdAsync(int userId)
+    {
+        return await _context.UserRoles
+            .Where(ur => ur.UserId == userId)
+            .Select(ur => ur.Role)
+            .ToListAsync();
+    }
+
+
+
+
 
 
 

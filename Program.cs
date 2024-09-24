@@ -1,9 +1,12 @@
+using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +42,9 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0, 21))));
+
+
+
 
 
 
@@ -109,6 +115,7 @@ app.UseMiddleware<AthorizeRoleMiddleware>();
 
 app.UseRouting();
 app.UseAuthorization();
+app.UseAuthorization();
 
 app.MapControllers();
 
@@ -132,9 +139,23 @@ async Task ConfigureAuthorizationPolicies(IServiceProvider serviceProvider)
             rolePermissionMap[role.Name] = roleWithPermissions.Permissions.Select(p => p.Name).ToList();
         }
 
-        // Now register policies
+        // Register dynamic role policy
         builder.Services.AddAuthorization(options =>
         {
+            options.AddPolicy("DynamicRolePolicy", policy =>
+            {
+                // Allow any user with one of the roles
+                policy.RequireAssertion(context =>
+                {
+                    var userRoles = context.User.Claims
+                        .Where(c => c.Type == ClaimTypes.Role)
+                        .Select(c => c.Value)
+                        .ToList();
+
+                    return userRoles.Any(role => roles.Any(r => r.Name == role));
+                });
+            });
+
             foreach (var role in roles)
             {
                 options.AddPolicy(role.Name, policy => policy.RequireRole(role.Name));

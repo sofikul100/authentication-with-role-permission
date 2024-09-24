@@ -18,7 +18,7 @@ public class CustomerController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Manager, Admin")]
+    [AuthorizeDynamicRoles]
     [Authorize(Policy = "view.customer")]
     public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers([FromQuery] string search = null, [FromQuery] string sortOrder = null, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1)
     {
@@ -38,7 +38,7 @@ public class CustomerController : ControllerBase
     }
 
     [HttpPost]
-     [Authorize(Roles = "Manager, Admin")]
+    [AuthorizeDynamicRoles]
     [Authorize(Policy = "add.customer")]
     public async Task<IActionResult> Create([FromBody] CustomerCreateDTO customerCreateDto)
     {
@@ -52,7 +52,7 @@ public class CustomerController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize(Roles = "Manager,Admin")]
+    [AuthorizeDynamicRoles]
     [Authorize(Policy = "update.customer")]
     public async Task<IActionResult> Update(int id, [FromBody] CustomerUpdateDTO customerUpdateDto)
     {
@@ -72,7 +72,7 @@ public class CustomerController : ControllerBase
 
     [HttpDelete("{id}")]
 
-    [Authorize(Roles = "Manager, Admin")] 
+    [AuthorizeDynamicRoles]
     [Authorize(Policy = "delete.customer")]
     public async Task<IActionResult> Delete(int id)
     {
